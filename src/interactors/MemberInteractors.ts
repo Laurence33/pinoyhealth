@@ -10,13 +10,13 @@ class MemberInteractor implements IMemberInteractor {
   async getMembers(limit: number, offset: number) {
     await this.repository.find(limit, offset);
   }
-  async updateMember(id: number, input: any) {
+  async updateMember(id: string, input: any) {
     await this.repository.update(id, input);
   }
-  async replaceMember(id: number, input: any) {
+  async replaceMember(id: string, input: any) {
     throw new Error('Method not implemented.');
   }
-  async deleteMember(id: number) {
+  async deleteMember(id: string) {
     throw new Error('Method not implemented.');
   }
 }

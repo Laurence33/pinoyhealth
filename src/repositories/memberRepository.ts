@@ -43,7 +43,7 @@ class MemberRepository implements IMemberRepository {
     return result[0] as Member;
   }
 
-  update(id: number, member: Member): Promise<Member> {
+  update(id: string, member: Member): Promise<Member> {
     throw new Error('Method not implemented.');
   }
   find(limit: number, offset: number): Promise<Member[]> {
