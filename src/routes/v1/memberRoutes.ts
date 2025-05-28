@@ -10,6 +10,7 @@ const memberController = new MemberController(memberInteractor);
 const router = Router();
 router.get('/', memberController.onGetMembers);
 router.post('/', memberController.onCreateMember);
+router.get('/:id', memberController.onGetMember);
 router.put('/:id', memberController.onReplaceMember);
 router.patch('/:id', memberController.onUpdateMember);
 router.delete('/:id', memberController.onDeleteMember);

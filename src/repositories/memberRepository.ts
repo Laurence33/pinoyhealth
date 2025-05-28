@@ -43,6 +43,14 @@ class MemberRepository implements IMemberRepository {
     return result[0] as Member;
   }
 
+  async findById(id: string): Promise<Member | null> {
+    const result = await this.client.exec(
+      `SELECT * FROM member WHERE member_number=$1;`,
+      [id],
+    );
+    return result[0] as Member;
+  }
+
   update(id: string, member: Member): Promise<Member> {
     throw new Error('Method not implemented.');
   }

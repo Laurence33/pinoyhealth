@@ -4,6 +4,7 @@ interface IMemberRepository {
   create(member: Member): Promise<Member>;
   update(id: string, member: Member): Promise<Member>;
   find(limit: number, offset: number): Promise<Member[]>;
+  findById(id: string): Promise<Member | null>;
 }
 
 export { IMemberRepository };

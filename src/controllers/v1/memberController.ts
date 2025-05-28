@@ -20,6 +20,21 @@ class MemberController {
     }
   };
 
+  onGetMember = async (
+    req: Request,
+    res: Response,
+    nxt: NextFunction,
+  ): Promise<any> => {
+    try {
+      const { id } = req.params;
+      // TODO: validate here
+      const member = await this.interactor.getMember(id);
+      return res.status(HttpCode.SUCCESS).json(member);
+    } catch (error) {
+      nxt(error);
+    }
+  };
+
   onGetMembers(req: Request, res: Response, nxt: NextFunction) {
     throw Error('Not implemented');
   }

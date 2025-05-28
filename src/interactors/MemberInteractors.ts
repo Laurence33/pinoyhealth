@@ -7,6 +7,9 @@ class MemberInteractor implements IMemberInteractor {
   createMember(input: any) {
     return this.repository.create(input);
   }
+  getMember(id: string): Promise<any | void | null> {
+    return this.repository.findById(id);
+  }
   async getMembers(limit: number, offset: number) {
     await this.repository.find(limit, offset);
   }
