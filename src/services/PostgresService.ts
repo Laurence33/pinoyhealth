@@ -17,7 +17,6 @@ class PgPool {
         rejectUnauthorized: false,
       },
     };
-    console.log('initializing pg connection...');
     this.pool = new Pool(poolConfig);
   }
 

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { IMemberInteractor } from '../../interfaces/IMemberInteractor';
-import { HttpCode } from '../../types/HttpCode';
+import { HttpCode } from '../../interfaces/HttpCode';
 
 class MemberController {
   constructor(private interactor: IMemberInteractor) {}
