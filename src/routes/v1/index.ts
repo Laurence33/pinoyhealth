@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import memberRoutes from './member.routes';
+import memberRoutes from './memberRoutes';
 
 const router = Router();
 

@@ -8,6 +8,7 @@ interface Config {
   dbHost: string;
   dbPort: number;
   dbName: string;
+  dbSchema: string;
   dbUser: string;
   dbPassword: string;
   dbSslMode: string;
@@ -20,6 +21,7 @@ const config: Config = {
   dbHost: process.env.DB_HOST || '',
   dbPort: Number(process.env.DB_PORT) || 5432,
   dbName: process.env.DB_NAME || '',
+  dbSchema: process.env.DB_SCHEMA || '',
   dbUser: process.env.DB_USER || '',
   dbPassword: process.env.DB_PASSWORD || '',
   dbSslMode: process.env.DB_SSL_MODE || '',

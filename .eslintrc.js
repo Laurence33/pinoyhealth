@@ -10,4 +10,7 @@ module.exports = {
     node: true,
     es6: true,
   },
+  rules: {
+    '@typescript-eslint/explicit-function-return-type': 'off'
+  }
 };
