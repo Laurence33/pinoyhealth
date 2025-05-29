@@ -1,14 +1,19 @@
-import express, { Request } from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import morgan from 'morgan';
 import config from './config/config';
 import v1Router from './routes/v1/index';
 import apiKeyMw from './middlewares/apiKeyMw';
 import { requestIdMw } from './middlewares/requestIdMw';
+import { Logger } from './utils/logger';
 
 const app = express();
 app.use(express.json());
 app.use(apiKeyMw);
 app.use(requestIdMw);
+app.use((req: Request, _res: Response, nxt: NextFunction) => {
+  req.logger = new Logger(req);
+  nxt();
+});
 
 morgan.token('id', (req: Request) => {
   return req.requestId.get();
@@ -23,5 +28,5 @@ app.use(
 app.use('/api/v1', v1Router);
 
 app.listen(config.port, () =>
-  console.log(`Server listening on port ${config.port}`),
+  Logger.info(`Server listening on port ${config.port}`),
 );
