@@ -1,6 +1,6 @@
 import { Pool, PoolConfig } from 'pg';
 import config from '../config/config';
-import { Logger } from 'utils/logger';
+import { Logger } from '../utils/logger';
 
 class PgPool {
   private pool: Pool;

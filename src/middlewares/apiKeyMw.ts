@@ -1,11 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import config from '../config/config';
 
-const apiKeyMw = (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): void | Response => {
+const apiKeyMw = (req: Request, res: Response, next: NextFunction): any => {
   const apiHeader = req.headers['x-api-key'];
   if (!apiHeader) {
     return res.status(403).json({

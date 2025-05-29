@@ -5,11 +5,13 @@ import v1Router from './routes/v1/index';
 import apiKeyMw from './middlewares/apiKeyMw';
 import { requestIdMw } from './middlewares/requestIdMw';
 import { Logger } from './utils/logger';
+import { globalErrorHandlerMw } from './middlewares/globalErrorHandlerMw';
 
 const app = express();
 app.use(express.json());
 app.use(apiKeyMw);
 app.use(requestIdMw);
+
 app.use((req: Request, _res: Response, nxt: NextFunction) => {
   req.logger = new Logger(req);
   nxt();
@@ -26,6 +28,8 @@ app.use(
 );
 
 app.use('/api/v1', v1Router);
+
+app.use(globalErrorHandlerMw);
 
 app.listen(config.port, () =>
   Logger.info(`Server listening on port ${config.port}`),

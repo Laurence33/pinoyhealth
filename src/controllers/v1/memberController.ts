@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { IMemberInteractor } from '../../interfaces/IMemberInteractor';
 import { HttpCode } from '../../interfaces/HttpCode';
+import { ApiError } from '../../utils/ApiError';
 
 class MemberController {
   constructor(private interactor: IMemberInteractor) {}
@@ -9,7 +10,7 @@ class MemberController {
     req: Request,
     res: Response,
     nxt: NextFunction,
-  ): Promise<Response | void> => {
+  ): Promise<any> => {
     try {
       const { body } = req;
       // TODO: validate here
@@ -23,8 +24,8 @@ class MemberController {
   onGetMember = async (
     req: Request,
     res: Response,
-    nxt: NextFunction,
-  ): Promise<Response | void> => {
+    _nxt: NextFunction,
+  ): Promise<any> => {
     try {
       const {
         params: { id },
@@ -32,8 +33,12 @@ class MemberController {
       // TODO: validate here
       const member = await this.interactor.getMember(id);
       return res.status(HttpCode.SUCCESS).json(member);
-    } catch (error) {
-      nxt(error);
+    } catch (error: any) {
+      throw new ApiError(
+        HttpCode.INTERNAL_SERVER_ERROR,
+        error.message,
+        error.stack,
+      );
     }
   };
 
