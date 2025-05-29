@@ -51,11 +51,27 @@ class MemberRepository implements IMemberRepository {
     return result[0] as Member;
   }
 
-  update(id: string, member: Member): Promise<Member> {
-    throw new Error('Method not implemented.');
+  async update(id: string, member: Member): Promise<Member> {
+    const keys = Object.keys(member);
+    const values = Object.values(member);
+
+    const setClause = keys.map((key, idx) => `${key} = $${idx + 1}`).join(', ');
+
+    const query = `UPDATE member SET ${setClause} WHERE member_number=$${keys.length + 1} RETURNING *;`;
+    const result = await this.client.exec(query, [...values, id]);
+
+    return result[0] as Member;
   }
+
   find(limit: number, offset: number): Promise<Member[]> {
     throw new Error('Method not implemented.');
+  }
+
+  async delete(id: string): Promise<Member | null> {
+    const query = `DELETE FROM member WHERE member_number=$1 RETURNING *;`;
+    const result = await this.client.exec(query, [id]);
+
+    return result[0] as Member;
   }
 }
 

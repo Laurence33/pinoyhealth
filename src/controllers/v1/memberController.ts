@@ -58,12 +58,57 @@ class MemberController {
   onReplaceMember(req: Request, res: Response, nxt: NextFunction) {
     throw Error('Not implemented');
   }
-  onUpdateMember(req: Request, res: Response, nxt: NextFunction) {
-    throw Error('Not implemented');
-  }
-  onDeleteMember(req: Request, res: Response, nxt: NextFunction) {
-    throw Error('Not implemented');
-  }
+  onUpdateMember = async (
+    req: Request,
+    res: Response,
+    _nxt: NextFunction,
+  ): Promise<any> => {
+    const { id } = req.params;
+    const fields = req.body;
+    try {
+      const updatedMember = await this.interactor.updateMember(id, fields);
+
+      return sendHttpResponse({
+        res,
+        statusCode: HttpCode.SUCCESS,
+        data: updatedMember,
+      });
+    } catch (error: any) {
+      throw new ApiError(
+        HttpCode.INTERNAL_SERVER_ERROR,
+        error.message,
+        error.stack,
+      );
+    }
+  };
+  onDeleteMember = async (
+    req: Request,
+    res: Response,
+    _nxt: NextFunction,
+  ): Promise<any> => {
+    try {
+      const { id } = req.params;
+      if (!id) {
+        throw new Error('Id is required');
+      }
+
+      // TODO: check for contribution
+      // TODO: check for dependents
+
+      const deletedMember = await this.interactor.deleteMember(id);
+      return sendHttpResponse({
+        res,
+        statusCode: HttpCode.SUCCESS,
+        data: deletedMember,
+      });
+    } catch (error: any) {
+      throw new ApiError(
+        HttpCode.INTERNAL_SERVER_ERROR,
+        error.message,
+        error.stack,
+      );
+    }
+  };
 }
 
 export { MemberController };

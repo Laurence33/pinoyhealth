@@ -5,6 +5,7 @@ interface IMemberRepository {
   update(id: string, member: Partial<Member>): Promise<Member>;
   find(limit: number, offset: number): Promise<Member[]>;
   findById(id: string): Promise<Member | null>;
+  delete(id: string): Promise<Member | null>;
 }
 
 export { IMemberRepository };

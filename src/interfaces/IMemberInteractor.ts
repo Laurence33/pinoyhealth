@@ -6,5 +6,5 @@ export interface IMemberInteractor {
   getMembers(limit: number, offset: number): Promise<Member[] | void | null>;
   replaceMember(id: string, input: Member): Promise<Member | void | null>;
   updateMember(id: string, input: Member): Promise<Member | void | null>;
-  deleteMember(id: string, input: Member): Promise<Member | void | null>;
+  deleteMember(id: string): Promise<Member | void | null>;
 }
