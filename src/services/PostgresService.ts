@@ -21,7 +21,6 @@ class PgPool {
     this.pool = new Pool(poolConfig);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async exec(query: string, data: any[]): Promise<any[]> {
     await this.pool.query(`SET SCHEMA '${config.dbSchema}';`);
     Logger.info('[PgPool.exec]', { query, data });

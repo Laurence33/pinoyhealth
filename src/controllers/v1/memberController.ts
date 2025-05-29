@@ -14,7 +14,6 @@ class MemberController {
   ): Promise<any> => {
     try {
       const { body } = req;
-      // TODO: validate here
       const member = await this.interactor.createMember(body);
 
       return sendHttpResponse({
