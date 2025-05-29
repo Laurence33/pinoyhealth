@@ -1,8 +1,10 @@
+import { Member } from 'entities/Member';
+
 export interface IMemberInteractor {
-  createMember(input: any): Promise<any | void | null>;
-  getMember(id: string): Promise<any | void | null>;
-  getMembers(limit: number, offset: number): Promise<Array<any> | void | null>;
-  replaceMember(id: string, input: any): Promise<any | void | null>;
-  updateMember(id: string, input: any): Promise<any | void | null>;
-  deleteMember(id: string, input: any): Promise<any | void | null>;
+  createMember(input: Member): Promise<Member | void | null>;
+  getMember(id: string): Promise<Member | void | null>;
+  getMembers(limit: number, offset: number): Promise<Member[] | void | null>;
+  replaceMember(id: string, input: Member): Promise<Member | void | null>;
+  updateMember(id: string, input: Member): Promise<Member | void | null>;
+  deleteMember(id: string, input: Member): Promise<Member | void | null>;
 }

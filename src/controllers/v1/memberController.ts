@@ -9,7 +9,7 @@ class MemberController {
     req: Request,
     res: Response,
     nxt: NextFunction,
-  ): Promise<any> => {
+  ): Promise<Response | void> => {
     try {
       const { body } = req;
       // TODO: validate here
@@ -24,9 +24,11 @@ class MemberController {
     req: Request,
     res: Response,
     nxt: NextFunction,
-  ): Promise<any> => {
+  ): Promise<Response | void> => {
     try {
-      const { id } = req.params;
+      const {
+        params: { id },
+      } = req;
       // TODO: validate here
       const member = await this.interactor.getMember(id);
       return res.status(HttpCode.SUCCESS).json(member);

@@ -1,5 +1,5 @@
 export type Member = {
-  member_number: number;
+  member_number?: string;
   employer_number: number;
   last_name: string;
   first_name: string;
