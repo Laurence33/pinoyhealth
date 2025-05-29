@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Request } from 'express';
 import morgan from 'morgan';
 import config from './config/config';
 import v1Router from './routes/v1/index';
@@ -17,7 +17,6 @@ app.use(addLoggerMw);
 morgan.token('id', (req: Request) => {
   return req.requestId.get();
 });
-
 app.use(
   morgan(
     'API Stats [:id]: :method :url :status :res[content-length] - :response-time ms',
