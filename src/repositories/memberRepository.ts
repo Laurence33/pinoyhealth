@@ -2,6 +2,7 @@ import { Member } from '../entities/Member';
 import { IMemberRepository } from '../interfaces/IMemberRepository';
 import { PgPool, pgPoolInstance } from '../services/PostgresService';
 import { generateRandomId } from '../utils/idGenerator';
+import { DBError } from '../utils/DBError';
 
 class MemberRepository implements IMemberRepository {
   private client: PgPool;
@@ -68,10 +69,14 @@ class MemberRepository implements IMemberRepository {
   }
 
   async delete(id: string): Promise<Member | null> {
-    const query = `DELETE FROM member WHERE member_number=$1 RETURNING *;`;
-    const result = await this.client.exec(query, [id]);
+    try {
+      const query = `DELETE FROM member WHERE member_number=$1 RETURNING *;`;
+      const result = await this.client.exec(query, [id]);
 
-    return result[0] as Member;
+      return result[0] as Member;
+    } catch (ex: any) {
+      throw new DBError(ex);
+    }
   }
 }
 
