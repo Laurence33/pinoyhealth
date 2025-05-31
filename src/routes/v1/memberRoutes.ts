@@ -1,19 +1,17 @@
 import { Router } from 'express';
 import { MemberController } from '../../controllers/v1/memberController';
 import { MemberInteractor } from '../../interactors/MemberInteractors';
-import { MemberRepository } from '../../repositories/memberRepository';
 import { validatorMw } from '../../middlewares/validatorMw';
 import { createMemberValidator } from '../../validators/createMemberValidator';
 import { BaseRepository } from '../../repositories/baseRepository';
 import { Member } from '../../entities/Member';
 import { TableName } from '../../interfaces/TableName';
 
-const memberRepository = new MemberRepository();
 const baseRepository = new BaseRepository<Member>({
   tableName: TableName.MEMBER,
   primaryKey: 'member_number',
 });
-const memberInteractor = new MemberInteractor(memberRepository, baseRepository);
+const memberInteractor = new MemberInteractor(baseRepository);
 const memberController = new MemberController(memberInteractor);
 
 const router = Router();

@@ -3,14 +3,10 @@ import {
   GetMembersResult,
   IMemberInteractor,
 } from '../interfaces/IMemberInteractor';
-import { IMemberRepository } from '../interfaces/IMemberRepository';
 import { IBaseRepository } from '../interfaces/IBaseRepository';
 
 class MemberInteractor implements IMemberInteractor {
-  constructor(
-    private repository: IMemberRepository,
-    private repo2: IBaseRepository<Member>,
-  ) {}
+  constructor(private repository: IBaseRepository<Member>) {}
 
   createMember(input: Member) {
     return this.repository.create(input);
@@ -23,9 +19,9 @@ class MemberInteractor implements IMemberInteractor {
     pageNumber: number,
   ): Promise<GetMembersResult> {
     const offset = (pageNumber - 1) * pageSize;
-    const count = await this.repository.countAll();
+    const count = await this.repository.count();
     const total_pages = Math.ceil(count / pageSize);
-    const result = await this.repo2.find(pageSize, offset);
+    const result = await this.repository.find(pageSize, offset);
     return { data: result, total: count, totalPages: total_pages };
   }
   async updateMember(id: string, input: Partial<Member>) {
@@ -35,7 +31,8 @@ class MemberInteractor implements IMemberInteractor {
     return await this.repository.update(id, input);
   }
   async deleteMember(id: string) {
-    return await this.repository.delete(id);
+    const res = await this.repository.delete(id);
+    return res[0] as Member;
   }
 }
 

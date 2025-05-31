@@ -53,21 +53,18 @@ const dbInstance = Knex({
 // Store start time for each query
 dbInstance.on('query', (query) => {
   query.__startTime = Date.now();
-  Logger.info(`QUERY ${query.sql}`);
-  if (query.bindings?.length) {
-    Logger.info(`BINDINGS:`, query.bindings);
-  }
+  Logger.info('Knex query:', query);
 });
 
 dbInstance.on('query-response', (response, query) => {
   const duration = Date.now() - (query.__startTime || Date.now());
-  Logger.info(`RESPONSE Took ${duration}ms`);
-  Logger.info(`RESPONSE`, response);
+  Logger.info(`Knex query response took ${duration}ms`);
+  Logger.info('Knex query response:', response);
 });
 
 dbInstance.on('query-error', (error, query) => {
   Logger.error(error.message);
-  Logger.info(query.sql);
+  Logger.info('Error on Knex query:', query.sql);
 });
 
 const pgPoolInstance = new PgPool();

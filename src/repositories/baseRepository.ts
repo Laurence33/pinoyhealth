@@ -18,12 +18,19 @@ class BaseRepository<T> implements IBaseRepository<T> {
     this.knex = dbInstance;
   }
 
-  create(data: T): Promise<T> {
-    throw new Error('Method not implemented.');
+  async create(data: T): Promise<T> {
+    const result = await this.knex(this.tableName).insert(data).returning('*');
+    return result[0] as T;
   }
-  update(id: string, attrs: Partial<T>): Promise<T> {
-    throw new Error('Method not implemented.');
+
+  async update(id: string, attrs: Partial<T>): Promise<T> {
+    const result = await this.knex(this.tableName)
+      .update(attrs)
+      .where({ [this.primaryKey]: id })
+      .returning('*');
+    return result[0] as T;
   }
+
   async find(limit: number, offset: number): Promise<T[]> {
     const result = await this.knex(this.tableName)
       .select('*')
@@ -32,17 +39,36 @@ class BaseRepository<T> implements IBaseRepository<T> {
       .offset(offset);
     return result as T[];
   }
-  findBy(attrs: Partial<T>): Promise<T | null> {
-    throw new Error('Method not implemented.');
+
+  async findBy(attrs: Partial<T>): Promise<T[]> {
+    const result = await this.knex(this.tableName).select('*').where(attrs);
+    return result as T[];
   }
-  delete(id: string): Promise<T | null> {
-    throw new Error('Method not implemented.');
+
+  async findById(id: string): Promise<T> {
+    const result = await this.knex(this.tableName)
+      .select('*')
+      .where({ [this.primaryKey]: id })
+      .returning('*');
+    return result[0] as T;
   }
-  count(): Promise<number> {
-    throw new Error('Method not implemented.');
+
+  async delete(id: string): Promise<T[]> {
+    const result = await this.knex(this.tableName)
+      .delete()
+      .where({ [this.primaryKey]: id })
+      .returning('*');
+    return result as T[];
   }
-  countBy(): Promise<number> {
-    throw new Error('Method not implemented.');
+
+  async count(): Promise<number> {
+    const result = await this.knex(this.tableName).count('*');
+    return Number(result[0].count);
+  }
+
+  async countBy(attrs: Partial<T>): Promise<number> {
+    const result = await this.knex(this.tableName).count('*').where(attrs);
+    return Number(result[0].count);
   }
 }
 
