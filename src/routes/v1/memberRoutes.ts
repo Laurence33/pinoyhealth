@@ -4,9 +4,16 @@ import { MemberInteractor } from '../../interactors/MemberInteractors';
 import { MemberRepository } from '../../repositories/memberRepository';
 import { validatorMw } from '../../middlewares/validatorMw';
 import { createMemberValidator } from '../../validators/createMemberValidator';
+import { BaseRepository } from '../../repositories/baseRepository';
+import { Member } from '../../entities/Member';
+import { TableName } from '../../interfaces/TableName';
 
 const memberRepository = new MemberRepository();
-const memberInteractor = new MemberInteractor(memberRepository);
+const baseRepository = new BaseRepository<Member>({
+  tableName: TableName.MEMBER,
+  primaryKey: 'member_number',
+});
+const memberInteractor = new MemberInteractor(memberRepository, baseRepository);
 const memberController = new MemberController(memberInteractor);
 
 const router = Router();

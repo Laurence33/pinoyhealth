@@ -1,6 +1,7 @@
 import { Pool, PoolConfig } from 'pg';
 import config from '../config/config';
 import { Logger } from '../utils/logger';
+import Knex from 'knex';
 
 class PgPool {
   private pool: Pool;
@@ -30,5 +31,44 @@ class PgPool {
   }
 }
 
+const dbInstance = Knex({
+  client: 'pg',
+  searchPath: config.dbSchema,
+  connection: {
+    host: config.dbHost,
+    port: config.dbPort,
+    user: config.dbUser,
+    password: config.dbPassword,
+    database: config.dbName,
+    ssl: {
+      rejectUnauthorized: false,
+    },
+    pool: {
+      min: 1,
+      max: 10,
+    },
+  },
+});
+
+// Store start time for each query
+dbInstance.on('query', (query) => {
+  query.__startTime = Date.now();
+  Logger.info(`QUERY ${query.sql}`);
+  if (query.bindings?.length) {
+    Logger.info(`BINDINGS:`, query.bindings);
+  }
+});
+
+dbInstance.on('query-response', (response, query) => {
+  const duration = Date.now() - (query.__startTime || Date.now());
+  Logger.info(`RESPONSE Took ${duration}ms`);
+  Logger.info(`RESPONSE`, response);
+});
+
+dbInstance.on('query-error', (error, query) => {
+  Logger.error(error.message);
+  Logger.info(query.sql);
+});
+
 const pgPoolInstance = new PgPool();
-export { pgPoolInstance, PgPool };
+export { pgPoolInstance, dbInstance, PgPool };

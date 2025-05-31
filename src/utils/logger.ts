@@ -30,6 +30,10 @@ class Logger {
   static info(...args: any) {
     Logger.log('INFO', ...args);
   }
+
+  static error(...args: any) {
+    Logger.log('ERROR', ...args);
+  }
 }
 
 export { Logger };
