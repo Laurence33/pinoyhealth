@@ -19,8 +19,9 @@ class MemberRepository implements IMemberRepository {
     telephone_number,
     permanent_address,
   }: Member): Promise<Member> {
-    const result = await this.client.exec(
-      `INSERT INTO member(
+    try {
+      const result = await this.client.exec(
+        `INSERT INTO member(
         member_number,
         employer_number, 
         last_name, 
@@ -30,38 +31,52 @@ class MemberRepository implements IMemberRepository {
         telephone_number,
         permanent_address 
       ) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *;`,
-      [
-        generateRandomId(),
-        employer_number,
-        last_name,
-        first_name,
-        date_of_birth,
-        email_address,
-        telephone_number,
-        permanent_address,
-      ],
-    );
-    return result[0] as Member;
+        [
+          generateRandomId(),
+          employer_number,
+          last_name,
+          first_name,
+          date_of_birth,
+          email_address,
+          telephone_number,
+          permanent_address,
+        ],
+      );
+
+      return result[0] as Member;
+    } catch (ex: any) {
+      throw new DBError(ex);
+    }
   }
 
   async findById(id: string): Promise<Member | null> {
-    const result = await this.client.exec(
-      `SELECT * FROM member WHERE member_number=$1;`,
-      [id],
-    );
-    return result[0] as Member;
+    try {
+      const result = await this.client.exec(
+        `SELECT * FROM member WHERE member_number=$1;`,
+        [id],
+      );
+      return result[0] as Member;
+    } catch (ex: any) {
+      throw new DBError(ex);
+    }
   }
 
   async update(id: string, member: Member): Promise<Member> {
-    const keys = Object.keys(member);
-    const values = Object.values(member);
+    try {
+      const keys = Object.keys(member);
+      const values = Object.values(member);
 
-    const setClause = keys.map((key, idx) => `${key} = $${idx + 1}`).join(', ');
+      const setClause = keys
+        .map((key, idx) => `${key} = $${idx + 1}`)
+        .join(', ');
 
-    const query = `UPDATE member SET ${setClause} WHERE member_number=$${keys.length + 1} RETURNING *;`;
-    const result = await this.client.exec(query, [...values, id]);
+      const query = `UPDATE member SET ${setClause} WHERE member_number=$${keys.length + 1} RETURNING *;`;
+      const result = await this.client.exec(query, [...values, id]);
 
-    return result[0] as Member;
+      return result[0] as Member;
+    } catch (ex: any) {
+      throw new DBError(ex);
+    }
   }
 
   async find(limit: number, offset: number): Promise<Member[]> {
