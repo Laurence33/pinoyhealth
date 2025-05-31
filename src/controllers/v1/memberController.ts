@@ -29,7 +29,6 @@ class MemberController {
     const {
       params: { id },
     } = req;
-    // TODO: validate here
     const member = await this.interactor.getMember(id);
 
     return sendHttpResponse({
@@ -39,12 +38,38 @@ class MemberController {
     });
   };
 
-  onGetMembers(req: Request, res: Response, nxt: NextFunction) {
-    throw Error('Not implemented');
-  }
-  onReplaceMember(req: Request, res: Response, nxt: NextFunction) {
-    throw Error('Not implemented');
-  }
+  onGetMembers = async (
+    req: Request,
+    res: Response,
+    _nxt: NextFunction,
+  ): Promise<any> => {
+    const { pageSize, pageNumber } = req.query;
+    const result = await this.interactor.getMembers(
+      Number(pageSize),
+      Number(pageNumber),
+    );
+    return sendHttpResponse({
+      res,
+      statusCode: HttpCode.SUCCESS,
+      data: result,
+    });
+  };
+
+  onReplaceMember = async (
+    req: Request,
+    res: Response,
+    _nxt: NextFunction,
+  ): Promise<any> => {
+    const { id } = req.params;
+    const fields = req.body;
+    const updatedMember = await this.interactor.updateMember(id, fields);
+
+    return sendHttpResponse({
+      res,
+      statusCode: HttpCode.SUCCESS,
+      data: updatedMember,
+    });
+  };
   onUpdateMember = async (
     req: Request,
     res: Response,

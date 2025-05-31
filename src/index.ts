@@ -10,6 +10,7 @@ import { addLoggerMw } from './middlewares/addLoggerMw';
 
 const app = express();
 app.use(express.json());
+app.use(express.urlencoded({ limit: '1mb' }));
 app.use(apiKeyMw);
 app.use(requestIdMw);
 app.use(addLoggerMw);

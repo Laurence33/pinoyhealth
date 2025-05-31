@@ -64,8 +64,14 @@ class MemberRepository implements IMemberRepository {
     return result[0] as Member;
   }
 
-  find(limit: number, offset: number): Promise<Member[]> {
-    throw new Error('Method not implemented.');
+  async find(limit: number, offset: number): Promise<Member[]> {
+    try {
+      const query = `SELECT * from member ORDER BY member_number LIMIT $1 OFFSET $2`;
+      const result = await this.client.exec(query, [limit, offset]);
+      return result as Member[];
+    } catch (ex: any) {
+      throw new DBError(ex);
+    }
   }
 
   async delete(id: string): Promise<Member | null> {
@@ -74,6 +80,16 @@ class MemberRepository implements IMemberRepository {
       const result = await this.client.exec(query, [id]);
 
       return result[0] as Member;
+    } catch (ex: any) {
+      throw new DBError(ex);
+    }
+  }
+
+  async countAll(): Promise<number> {
+    try {
+      const query = 'SELECT COUNT(*) from member;';
+      const result = await this.client.exec(query, []);
+      return Number(result[0].count);
     } catch (ex: any) {
       throw new DBError(ex);
     }
