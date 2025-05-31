@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { MemberController } from '../../controllers/v1/memberController';
-import { MemberInteractor } from '../../interactors/MemberInteractors';
+import { MemberInteractor } from '../../interactors/MemberInteractor';
 import { validatorMw } from '../../middlewares/validatorMw';
 import { createMemberValidator } from '../../validators/createMemberValidator';
 import { BaseRepository } from '../../repositories/baseRepository';
