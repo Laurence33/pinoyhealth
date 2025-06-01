@@ -1,4 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
+import { format } from '@fast-csv/format';
+import { formatDate } from 'date-fns';
 import { IMemberInteractor } from '../../interfaces/IMemberInteractor';
 import { HttpCode } from '../../interfaces/HttpCode';
 import { sendHttpResponse } from '../../utils/httpResponse';
@@ -97,6 +99,36 @@ class MemberController {
       statusCode: HttpCode.SUCCESS,
       data: result,
     });
+  };
+
+  onDownloadContributions = async (
+    req: Request,
+    res: Response,
+    _nxt: NextFunction,
+  ): Promise<any> => {
+    const { id } = req.params;
+    const member = await this.interactor.getMember(id);
+    if (!member) {
+      throw new ValidationError(`Member with id ${id} not found`);
+    }
+    const contributions = await this.interactor.getContributions(id);
+
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename="contributions-${member.member_number}.csv"`,
+    );
+
+    const stream = format({ headers: true });
+    stream.pipe(res);
+
+    contributions.forEach((contribution) => {
+      stream.write({
+        ...contribution,
+        month: formatDate(new Date(contribution.month), 'yyyy-MM-dd'),
+      });
+    });
+    stream.end();
   };
 
   onCreateContribution = async (

@@ -48,6 +48,7 @@ router.post(
   memberController.onCreateDependent,
 );
 router.get('/:id/contributions', memberController.onGetContributions);
+router.get('/:id/contributions/csv', memberController.onDownloadContributions);
 router.post(
   '/:id/contributions',
   validatorMw(createContributionValidator),
