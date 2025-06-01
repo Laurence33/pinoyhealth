@@ -50,15 +50,12 @@ const dbInstance = Knex({
   },
 });
 
-// Store start time for each query
 dbInstance.on('query', (query) => {
-  query.__startTime = Date.now();
-  Logger.info('Knex query:', query);
+  const { sql, bindings } = query;
+  Logger.info('Knex query:', { sql, bindings });
 });
 
-dbInstance.on('query-response', (response, query) => {
-  const duration = Date.now() - (query.__startTime || Date.now());
-  Logger.info(`Knex query response took ${duration}ms`);
+dbInstance.on('query-response', (response, _query) => {
   Logger.info('Knex query response:', response);
 });
 
