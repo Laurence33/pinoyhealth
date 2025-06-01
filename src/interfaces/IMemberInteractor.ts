@@ -1,3 +1,4 @@
+import { Dependent } from 'entities/Dependent';
 import { Member } from 'entities/Member';
 
 export interface GetMembersResult {
@@ -9,6 +10,7 @@ export interface IMemberInteractor {
   createMember(input: Member): Promise<Member | void | null>;
   getMember(id: string): Promise<Member | void | null>;
   getMembers(pageSize: number, pageNumber: number): Promise<GetMembersResult>;
+  getDependentsByMemberId(id: string): Promise<Dependent[]>;
   replaceMember(id: string, input: Member): Promise<Member | void | null>;
   updateMember(id: string, input: Member): Promise<Member | void | null>;
   deleteMember(id: string): Promise<Member | void | null>;

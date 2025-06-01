@@ -1,4 +1,5 @@
 import { Member } from 'entities/Member';
+import { Dependent } from 'entities/Dependent';
 import {
   GetMembersResult,
   IMemberInteractor,
@@ -6,7 +7,10 @@ import {
 import { IBaseRepository } from '../interfaces/IBaseRepository';
 
 class MemberInteractor implements IMemberInteractor {
-  constructor(private repository: IBaseRepository<Member>) {}
+  constructor(
+    private repository: IBaseRepository<Member>,
+    private dependentRepository: IBaseRepository<Dependent>,
+  ) {}
 
   createMember(input: Member) {
     return this.repository.create(input);
@@ -24,6 +28,10 @@ class MemberInteractor implements IMemberInteractor {
     const result = await this.repository.find(pageSize, offset);
     return { data: result, total: count, totalPages: total_pages };
   }
+
+  async getDependentsByMemberId(id: string): Promise<Dependent[]> {
+    return await this.dependentRepository.findBy({ parent_member_number: id });
+  }
   async updateMember(id: string, input: Partial<Member>) {
     return await this.repository.update(id, input);
   }
@@ -31,6 +39,7 @@ class MemberInteractor implements IMemberInteractor {
     return await this.repository.update(id, input);
   }
   async deleteMember(id: string) {
+    // TODO: check if member has dependents and contribution
     const res = await this.repository.delete(id);
     return res[0] as Member;
   }

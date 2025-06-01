@@ -55,6 +55,20 @@ class MemberController {
     });
   };
 
+  onGetDependents = async (
+    req: Request,
+    res: Response,
+    _nxt: NextFunction,
+  ): Promise<any> => {
+    const { id } = req.params;
+    const result = await this.interactor.getDependentsByMemberId(id);
+    return sendHttpResponse({
+      res,
+      statusCode: HttpCode.SUCCESS,
+      data: result,
+    });
+  };
+
   onReplaceMember = async (
     req: Request,
     res: Response,
