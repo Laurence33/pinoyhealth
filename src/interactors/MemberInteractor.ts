@@ -21,9 +21,11 @@ class MemberInteractor implements IMemberInteractor {
     const id = generateRandomId();
     return this.repository.create({ ...input, member_number: id });
   }
+
   getMember(id: string): Promise<Member | void | null> {
     return this.repository.findById(id);
   }
+
   async getMembers(
     pageSize: number,
     pageNumber: number,
@@ -51,6 +53,7 @@ class MemberInteractor implements IMemberInteractor {
       member_number: memberId,
     });
   }
+
   async createContribution(
     id: string,
     contribution: Contribution,
@@ -76,11 +79,33 @@ class MemberInteractor implements IMemberInteractor {
   }
 
   async updateMember(id: string, input: Partial<Member>) {
-    return await this.repository.update(id, input);
+    const { employer_number, ...allowedAttrs } = input;
+    if (employer_number) {
+      throw new ValidationError('Cannot update employer_number.');
+    }
+    return await this.repository.update(id, allowedAttrs);
   }
+
   async replaceMember(id: string, input: Member) {
-    return await this.repository.update(id, input);
+    const { employer_number, ...allowedAttrs } = input;
+    if (employer_number) {
+      throw new ValidationError('Cannot update employer_number.');
+    }
+    return await this.repository.update(id, allowedAttrs);
   }
+
+  async updateEmployerNumber(
+    id: string,
+    employer_number: string,
+  ): Promise<Member> {
+    // add some special business logic here for updating employer_number
+    const member = await this.repository.findById(id);
+    if (member.employer_number === employer_number) {
+      throw new ValidationError('Already in same employer_number.');
+    }
+    return this.repository.update(id, { employer_number });
+  }
+
   async deleteMember(id: string) {
     const dependents = await this.dependentRepository.countBy({
       parent_member_number: id,

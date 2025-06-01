@@ -9,6 +9,7 @@ import { TableName } from '../../interfaces/TableName';
 import { Dependent } from 'entities/Dependent';
 import { Contribution } from 'entities/Contribution';
 import { createContributionValidator } from '../../validators/createContributionValidator';
+import { updateMemberEmployerNumberValidator } from '../../validators/updateMemberEmployerNumber';
 
 const baseRepository = new BaseRepository<Member>({
   tableName: TableName.MEMBER,
@@ -49,6 +50,11 @@ router.post(
 );
 router.put('/:id', memberController.onReplaceMember);
 router.patch('/:id', memberController.onUpdateMember);
+router.patch(
+  '/:id/employer_number',
+  validatorMw(updateMemberEmployerNumberValidator),
+  memberController.onUpdateEmployerNumber,
+);
 router.delete('/:id', memberController.onDeleteMember);
 
 export default router;

@@ -145,6 +145,23 @@ class MemberController {
       data: updatedMember,
     });
   };
+  onUpdateEmployerNumber = async (
+    req: Request,
+    res: Response,
+    _nxt: NextFunction,
+  ): Promise<any> => {
+    const { id } = req.params;
+    const { employer_number } = req.body;
+    const updatedMember = await this.interactor.updateEmployerNumber(
+      id,
+      employer_number,
+    );
+    return sendHttpResponse({
+      res,
+      statusCode: HttpCode.SUCCESS,
+      data: updatedMember,
+    });
+  };
   onDeleteMember = async (
     req: Request,
     res: Response,

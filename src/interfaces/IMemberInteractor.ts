@@ -20,5 +20,6 @@ export interface IMemberInteractor {
   ): Promise<Contribution>;
   replaceMember(id: string, input: Member): Promise<Member | void | null>;
   updateMember(id: string, input: Member): Promise<Member | void | null>;
+  updateEmployerNumber(id: string, employer_number: string): Promise<Member>;
   deleteMember(id: string): Promise<Member | void | null>;
 }
