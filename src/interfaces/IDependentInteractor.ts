@@ -16,5 +16,5 @@ export interface IDependentInteractor {
     id: string,
     input: Dependent,
   ): Promise<Dependent | void | null>;
-  // deleteDependent(id: string): Promise<Dependent | void | null>;
+  deleteDependent(id: string): Promise<Dependent | void | null>;
 }

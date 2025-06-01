@@ -126,7 +126,7 @@ class MemberInteractor implements IMemberInteractor {
     }
 
     const res = await this.repository.delete(id);
-    return res[0] as Member;
+    return res as Member;
   }
 }
 

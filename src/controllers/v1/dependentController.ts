@@ -56,6 +56,22 @@ class DependentController {
       data: result,
     });
   };
+
+  onDeleteDependent = async (
+    req: Request,
+    res: Response,
+    _nxt: NextFunction,
+  ): Promise<any> => {
+    const {
+      params: { id },
+    } = req;
+    const result = await this.interactor.deleteDependent(id);
+    return sendHttpResponse({
+      res,
+      statusCode: HttpCode.SUCCESS,
+      data: result,
+    });
+  };
 }
 
 export { DependentController };

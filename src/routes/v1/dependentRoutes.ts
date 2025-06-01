@@ -22,6 +22,6 @@ router.patch(
   validatorMw(createUpdateDependentValidator),
   dependentController.onUpdateDependent,
 );
-// router.delete('/:id', dependentController.onDeleteDependent);
+router.delete('/:id', dependentController.onDeleteDependent);
 
 export default router;

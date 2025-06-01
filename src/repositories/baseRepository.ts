@@ -76,13 +76,13 @@ class BaseRepository<T> implements IBaseRepository<T> {
     }
   }
 
-  async delete(id: string): Promise<T[]> {
+  async delete(id: string): Promise<T> {
     try {
       const result = await this.knex(this.tableName)
         .delete()
         .where({ [this.primaryKey]: id })
         .returning('*');
-      return result as T[];
+      return result[0] as T;
     } catch (ex: any) {
       throw new DBError(ex);
     }

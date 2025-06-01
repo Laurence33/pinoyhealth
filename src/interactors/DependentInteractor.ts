@@ -33,6 +33,10 @@ class DependentInteractor implements IDependentInteractor {
   ): Promise<Dependent | void | null> {
     return this.repository.update(id, input);
   }
+
+  deleteDependent(id: string): Promise<Dependent | void | null> {
+    return this.repository.delete(id);
+  }
 }
 
 export { DependentInteractor };
