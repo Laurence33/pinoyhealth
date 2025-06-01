@@ -1,3 +1,4 @@
+import { startOfMonth } from 'date-fns';
 import { Member } from 'entities/Member';
 import { Dependent } from 'entities/Dependent';
 import { Contribution } from 'entities/Contribution';
@@ -47,6 +48,29 @@ class MemberInteractor implements IMemberInteractor {
   async getContributions(memberId: string): Promise<Contribution[]> {
     return await this.contributionRepository.findBy({
       member_number: memberId,
+    });
+  }
+  async createContribution(
+    id: string,
+    contribution: Contribution,
+  ): Promise<Contribution> {
+    const { employer_number } = await this.repository.findById(id);
+
+    // check for duplicate using member_number, employer_number, and month
+    const found = await this.contributionRepository.findBy({
+      employer_number: employer_number,
+      member_number: id,
+      month: startOfMonth(contribution.month),
+    });
+
+    if (found.length) {
+      throw new Error('Duplicate month for contribution');
+    }
+
+    return this.contributionRepository.create({
+      ...contribution,
+      employer_number: employer_number,
+      member_number: id,
     });
   }
 

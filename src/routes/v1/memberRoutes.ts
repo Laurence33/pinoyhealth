@@ -8,6 +8,7 @@ import { Member } from '../../entities/Member';
 import { TableName } from '../../interfaces/TableName';
 import { Dependent } from 'entities/Dependent';
 import { Contribution } from 'entities/Contribution';
+import { createContributionValidator } from '../../validators/createContributionValidator';
 
 const baseRepository = new BaseRepository<Member>({
   tableName: TableName.MEMBER,
@@ -41,6 +42,11 @@ router.get('/:id', memberController.onGetMember);
 router.get('/:id/dependents', memberController.onGetDependents);
 router.post('/:id/dependents', memberController.onCreateDependent);
 router.get('/:id/contributions', memberController.onGetContributions);
+router.post(
+  '/:id/contributions',
+  validatorMw(createContributionValidator),
+  memberController.onCreateContribution,
+);
 router.put('/:id', memberController.onReplaceMember);
 router.patch('/:id', memberController.onUpdateMember);
 router.delete('/:id', memberController.onDeleteMember);
