@@ -1,6 +1,7 @@
-import { nanoid } from 'nanoid';
+import { customAlphabet } from 'nanoid';
 function generateRandomId() {
-  const id = nanoid(12);
+  const nanoIdNumber = customAlphabet('0123456789', 12);
+  const id = nanoIdNumber();
   return id;
 }
 
