@@ -33,8 +33,15 @@ class MemberInteractor implements IMemberInteractor {
     return { data: result, total: count, totalPages: total_pages };
   }
 
-  async getDependentsByMemberId(id: string): Promise<Dependent[]> {
-    return await this.dependentRepository.findBy({ parent_member_number: id });
+  getDependents(id: string): Promise<Dependent[]> {
+    return this.dependentRepository.findBy({ parent_member_number: id });
+  }
+
+  createDependent(id: string, dependent: Dependent): Promise<Dependent> {
+    return this.dependentRepository.create({
+      ...dependent,
+      parent_member_number: id,
+    });
   }
 
   async getContributions(memberId: string): Promise<Contribution[]> {

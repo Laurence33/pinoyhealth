@@ -11,7 +11,8 @@ export interface IMemberInteractor {
   createMember(input: Member): Promise<Member | void | null>;
   getMember(id: string): Promise<Member | void | null>;
   getMembers(pageSize: number, pageNumber: number): Promise<GetMembersResult>;
-  getDependentsByMemberId(id: string): Promise<Dependent[]>;
+  getDependents(id: string): Promise<Dependent[]>;
+  createDependent(id: string, dependent: Dependent): Promise<Dependent>;
   getContributions(id: string): Promise<Contribution[]>;
   replaceMember(id: string, input: Member): Promise<Member | void | null>;
   updateMember(id: string, input: Member): Promise<Member | void | null>;

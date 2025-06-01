@@ -39,6 +39,7 @@ router.post(
 );
 router.get('/:id', memberController.onGetMember);
 router.get('/:id/dependents', memberController.onGetDependents);
+router.post('/:id/dependents', memberController.onCreateDependent);
 router.get('/:id/contributions', memberController.onGetContributions);
 router.put('/:id', memberController.onReplaceMember);
 router.patch('/:id', memberController.onUpdateMember);

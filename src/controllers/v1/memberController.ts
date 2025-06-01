@@ -61,7 +61,23 @@ class MemberController {
     _nxt: NextFunction,
   ): Promise<any> => {
     const { id } = req.params;
-    const result = await this.interactor.getDependentsByMemberId(id);
+    const result = await this.interactor.getDependents(id);
+    return sendHttpResponse({
+      res,
+      statusCode: HttpCode.SUCCESS,
+      data: result,
+    });
+  };
+
+  onCreateDependent = async (
+    req: Request,
+    res: Response,
+    _nxt: NextFunction,
+  ): Promise<any> => {
+    // TODO: need validation
+    const { id } = req.params;
+    const { body } = req;
+    const result = await this.interactor.createDependent(id, body);
     return sendHttpResponse({
       res,
       statusCode: HttpCode.SUCCESS,
