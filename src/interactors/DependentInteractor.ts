@@ -26,6 +26,13 @@ class DependentInteractor implements IDependentInteractor {
   getDependentsByMemberId(memberId: string): Promise<Dependent[]> {
     return this.repository.findBy({ parent_member_number: memberId });
   }
+
+  updateDependent(
+    id: string,
+    input: Dependent,
+  ): Promise<Dependent | void | null> {
+    return this.repository.update(id, input);
+  }
 }
 
 export { DependentInteractor };

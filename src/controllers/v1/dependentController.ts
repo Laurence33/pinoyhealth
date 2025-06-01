@@ -39,6 +39,23 @@ class DependentController {
       data: result,
     });
   };
+
+  onUpdateDependent = async (
+    req: Request,
+    res: Response,
+    _nxt: NextFunction,
+  ): Promise<any> => {
+    const {
+      params: { id },
+      body,
+    } = req;
+    const result = await this.interactor.updateDependent(id, body);
+    return sendHttpResponse({
+      res,
+      statusCode: HttpCode.SUCCESS,
+      data: result,
+    });
+  };
 }
 
 export { DependentController };

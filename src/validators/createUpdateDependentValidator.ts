@@ -1,6 +1,6 @@
 import { z } from 'zod/v4';
 
-const createDependentValidator = z.object({
+const createUpdateDependentValidator = z.object({
   last_name: z.string(),
   first_name: z.string(),
   date_of_birth: z
@@ -11,4 +11,4 @@ const createDependentValidator = z.object({
     }),
 });
 
-export { createDependentValidator };
+export { createUpdateDependentValidator };

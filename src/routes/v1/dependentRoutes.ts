@@ -4,6 +4,8 @@ import { DependentInteractor } from '../../interactors/DependentInteractor';
 import { BaseRepository } from '../../repositories/baseRepository';
 import { TableName } from '../../interfaces/TableName';
 import { Dependent } from 'entities/Dependent';
+import { validatorMw } from '../../middlewares/validatorMw';
+import { createUpdateDependentValidator } from '../../validators/createUpdateDependentValidator';
 
 const baseRepository = new BaseRepository<Dependent>({
   tableName: TableName.DEPENDENT,
@@ -14,14 +16,12 @@ const dependentController = new DependentController(dependentInteractor);
 
 const router = Router();
 router.get('/', dependentController.onGetDependents);
-// router.post(
-//   '/',
-//   validatorMw(createDependentValidator),
-//   dependentController.onCreateDependent,
-// );
 router.get('/:id', dependentController.onGetDependent);
-// router.put('/:id', dependentController.onReplaceDependent);
-// router.patch('/:id', dependentController.onUpdateDependent);
+router.patch(
+  '/:id',
+  validatorMw(createUpdateDependentValidator),
+  dependentController.onUpdateDependent,
+);
 // router.delete('/:id', dependentController.onDeleteDependent);
 
 export default router;
