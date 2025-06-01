@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { HttpCode } from '../interfaces/HttpCode';
 import { DBError } from '../utils/DBError';
 import { ApiError } from '../utils/ApiError';
+import { Logger } from '../utils/logger';
 
 const globalErrorHandlerMw = (
   err: Error,
@@ -15,7 +16,8 @@ const globalErrorHandlerMw = (
   const stack = err.stack || '';
 
   // Log the exception to CloudWatch, Prometheus, or other monitoring software, for better investigation capability in production
-  logger.info('Exception:', err);
+  if (logger) logger.info('Exception:', err);
+  else Logger.info('Exception:', err);
 
   if (err instanceof DBError) {
     message = 'Encountered a database error.';
@@ -24,7 +26,7 @@ const globalErrorHandlerMw = (
   }
 
   res.status(status).json({
-    status,
+    statusCode: status,
     message,
     ...(process.env.NODE_ENV !== 'prd' ? { stackTrace: stack } : {}), // include the stack trace in non-prod env
   });
