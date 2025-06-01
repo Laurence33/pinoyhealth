@@ -3,5 +3,5 @@ export type Contribution = {
   member_share: number;
   employer_number: string;
   employer_share: number;
-  month: Date;
+  month: Date | string;
 };

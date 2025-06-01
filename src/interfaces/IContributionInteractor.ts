@@ -8,4 +8,5 @@ export interface GetContributionsResult {
 export interface IContributionInteractor {
   getContribution(id: string): Promise<Contribution | void | null>;
   getContributionsByMemberId(memberId: string): Promise<Contribution[]>;
+  updateContribution(contribution: Contribution): Promise<Contribution>;
 }

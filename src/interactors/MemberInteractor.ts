@@ -1,4 +1,4 @@
-import { startOfMonth } from 'date-fns';
+import { format, startOfMonth } from 'date-fns';
 import { Member } from 'entities/Member';
 import { Dependent } from 'entities/Dependent';
 import { Contribution } from 'entities/Contribution';
@@ -64,7 +64,7 @@ class MemberInteractor implements IMemberInteractor {
     const found = await this.contributionRepository.findBy({
       employer_number: employer_number,
       member_number: id,
-      month: startOfMonth(contribution.month),
+      month: new Date(format(startOfMonth(contribution.month), 'yyyy-MM-dd')),
     });
 
     if (found.length) {

@@ -10,9 +10,9 @@ type BaseRepositoryParameters = {
 };
 
 class BaseRepository<T> implements IBaseRepository<T> {
-  private tableName: TableName;
-  private primaryKey: string;
-  private knex: Knex.Knex;
+  tableName: TableName;
+  primaryKey: string;
+  knex: Knex.Knex;
   constructor({ tableName, primaryKey }: BaseRepositoryParameters) {
     this.tableName = tableName;
     this.primaryKey = primaryKey;
