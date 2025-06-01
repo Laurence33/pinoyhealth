@@ -154,9 +154,6 @@ class MemberController {
       throw new Error('Id is required');
     }
 
-    // TODO: check for contribution
-    // TODO: check for dependents
-
     const deletedMember = await this.interactor.deleteMember(id);
     return sendHttpResponse({
       res,
