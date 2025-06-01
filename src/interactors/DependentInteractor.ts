@@ -7,9 +7,7 @@ import { IBaseRepository } from '../interfaces/IBaseRepository';
 
 class DependentInteractor implements IDependentInteractor {
   constructor(private repository: IBaseRepository<Dependent>) {}
-  // createDependent(input: Dependent) {
-  //   return this.repository.create(input);
-  // }
+
   getDependent(id: string): Promise<Dependent | void | null> {
     return this.repository.findById(id);
   }
@@ -28,18 +26,6 @@ class DependentInteractor implements IDependentInteractor {
   getDependentsByMemberId(memberId: string): Promise<Dependent[]> {
     return this.repository.findBy({ parent_member_number: memberId });
   }
-
-  // async updateDependent(id: string, input: Partial<Dependent>) {
-  //   return await this.repository.update(id, input);
-  // }
-  // async replaceDependent(id: string, input: Dependent) {
-  //   return await this.repository.update(id, input);
-  // }
-  // async deleteDependent(id: string) {
-  //   // TODO: check if dependent has dependents and contribution
-  //   const res = await this.repository.delete(id);
-  //   return res[0] as Dependent;
-  // }
 }
 
 export { DependentInteractor };
