@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Request } from 'express';
 import morgan from 'morgan';
 import config from './config/config';
 import v1Router from './routes/v1/index';
@@ -7,8 +7,6 @@ import { requestIdMw } from './middlewares/requestIdMw';
 import { Logger } from './utils/logger';
 import { globalErrorHandlerMw } from './middlewares/globalErrorHandlerMw';
 import { addLoggerMw } from './middlewares/addLoggerMw';
-import { ApiError } from './utils/ApiError';
-import { HttpCode } from './interfaces/HttpCode';
 
 const app = express();
 app.use(express.json());
