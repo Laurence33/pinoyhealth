@@ -75,7 +75,6 @@ class MemberController {
     res: Response,
     _nxt: NextFunction,
   ): Promise<any> => {
-    // TODO: need validation
     const { id } = req.params;
     const { body } = req;
     const result = await this.interactor.createDependent(id, body);
