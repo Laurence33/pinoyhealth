@@ -5,6 +5,7 @@ import {
   IMemberInteractor,
 } from '../interfaces/IMemberInteractor';
 import { IBaseRepository } from '../interfaces/IBaseRepository';
+import { generateRandomId } from '../utils/idGenerator';
 
 class MemberInteractor implements IMemberInteractor {
   constructor(
@@ -13,7 +14,8 @@ class MemberInteractor implements IMemberInteractor {
   ) {}
 
   createMember(input: Member) {
-    return this.repository.create(input);
+    const id = generateRandomId();
+    return this.repository.create({ ...input, member_number: id });
   }
   getMember(id: string): Promise<Member | void | null> {
     return this.repository.findById(id);
