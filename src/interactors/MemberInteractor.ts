@@ -1,5 +1,6 @@
 import { Member } from 'entities/Member';
 import { Dependent } from 'entities/Dependent';
+import { Contribution } from 'entities/Contribution';
 import {
   GetMembersResult,
   IMemberInteractor,
@@ -11,6 +12,7 @@ class MemberInteractor implements IMemberInteractor {
   constructor(
     private repository: IBaseRepository<Member>,
     private dependentRepository: IBaseRepository<Dependent>,
+    private contributionRepository: IBaseRepository<Contribution>,
   ) {}
 
   createMember(input: Member) {
@@ -34,6 +36,13 @@ class MemberInteractor implements IMemberInteractor {
   async getDependentsByMemberId(id: string): Promise<Dependent[]> {
     return await this.dependentRepository.findBy({ parent_member_number: id });
   }
+
+  async getContributions(memberId: string): Promise<Contribution[]> {
+    return await this.contributionRepository.findBy({
+      member_number: memberId,
+    });
+  }
+
   async updateMember(id: string, input: Partial<Member>) {
     return await this.repository.update(id, input);
   }

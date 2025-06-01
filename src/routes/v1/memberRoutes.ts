@@ -7,6 +7,7 @@ import { BaseRepository } from '../../repositories/baseRepository';
 import { Member } from '../../entities/Member';
 import { TableName } from '../../interfaces/TableName';
 import { Dependent } from 'entities/Dependent';
+import { Contribution } from 'entities/Contribution';
 
 const baseRepository = new BaseRepository<Member>({
   tableName: TableName.MEMBER,
@@ -16,9 +17,16 @@ const dependentRepository = new BaseRepository<Dependent>({
   tableName: TableName.DEPENDENT,
   primaryKey: 'id',
 });
+
+const contributionRepository = new BaseRepository<Contribution>({
+  tableName: TableName.CONTRIBUTION,
+  primaryKey: 'member_number',
+});
+
 const memberInteractor = new MemberInteractor(
   baseRepository,
   dependentRepository,
+  contributionRepository,
 );
 const memberController = new MemberController(memberInteractor);
 
@@ -31,6 +39,7 @@ router.post(
 );
 router.get('/:id', memberController.onGetMember);
 router.get('/:id/dependents', memberController.onGetDependents);
+router.get('/:id/contributions', memberController.onGetContributions);
 router.put('/:id', memberController.onReplaceMember);
 router.patch('/:id', memberController.onUpdateMember);
 router.delete('/:id', memberController.onDeleteMember);
