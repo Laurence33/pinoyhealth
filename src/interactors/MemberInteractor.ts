@@ -8,6 +8,7 @@ import {
 } from '../interfaces/IMemberInteractor';
 import { IBaseRepository } from '../interfaces/IBaseRepository';
 import { generateRandomId } from '../utils/idGenerator';
+import { ValidationError } from '../utils/ValidationError';
 
 class MemberInteractor implements IMemberInteractor {
   constructor(
@@ -64,7 +65,7 @@ class MemberInteractor implements IMemberInteractor {
     });
 
     if (found.length) {
-      throw new Error('Duplicate month for contribution');
+      throw new ValidationError('Duplicate month for contribution');
     }
 
     return this.contributionRepository.create({
@@ -81,7 +82,24 @@ class MemberInteractor implements IMemberInteractor {
     return await this.repository.update(id, input);
   }
   async deleteMember(id: string) {
-    // TODO: check if member has dependents and contribution
+    const dependents = await this.dependentRepository.countBy({
+      parent_member_number: id,
+    });
+    if (dependents) {
+      throw new ValidationError(
+        'Cannot delete member that has dependents attached.',
+      );
+    }
+
+    const contributions = await this.contributionRepository.countBy({
+      member_number: id,
+    });
+    if (contributions) {
+      throw new ValidationError(
+        'Cannot delete member that has contributions attached.',
+      );
+    }
+
     const res = await this.repository.delete(id);
     return res[0] as Member;
   }

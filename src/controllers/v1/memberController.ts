@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { IMemberInteractor } from '../../interfaces/IMemberInteractor';
 import { HttpCode } from '../../interfaces/HttpCode';
 import { sendHttpResponse } from '../../utils/httpResponse';
+import { ValidationError } from '../../utils/ValidationError';
 
 class MemberController {
   constructor(private interactor: IMemberInteractor) {}
@@ -151,7 +152,7 @@ class MemberController {
   ): Promise<any> => {
     const { id } = req.params;
     if (!id) {
-      throw new Error('Id is required');
+      throw new ValidationError('Id is required');
     }
 
     const deletedMember = await this.interactor.deleteMember(id);
