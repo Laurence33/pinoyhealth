@@ -1,4 +1,4 @@
-import express, { Request } from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import morgan from 'morgan';
 import config from './config/config';
 import v1Router from './routes/v1/index';
@@ -7,6 +7,8 @@ import { requestIdMw } from './middlewares/requestIdMw';
 import { Logger } from './utils/logger';
 import { globalErrorHandlerMw } from './middlewares/globalErrorHandlerMw';
 import { addLoggerMw } from './middlewares/addLoggerMw';
+import { ApiError } from './utils/ApiError';
+import { HttpCode } from './interfaces/HttpCode';
 
 const app = express();
 app.use(express.json());
@@ -26,8 +28,13 @@ app.use(
 
 app.use('/api/v1', v1Router);
 
+// ? Not found handler
+// app.use('*', (_req: Request, res: Response, _nxt: NextFunction) => {
+//   res.status(404).json({ statusCode: 404, message: 'Not found' });
+// });
+
 app.use(globalErrorHandlerMw);
 
-app.listen(config.port, () =>
+app.listen(config.port, '0.0.0.0', () =>
   Logger.info(`Server listening on port ${config.port}`),
 );
