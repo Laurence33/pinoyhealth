@@ -11,6 +11,7 @@ import { Contribution } from 'entities/Contribution';
 import { createContributionValidator } from '../../validators/createContributionValidator';
 import { updateMemberEmployerNumberValidator } from '../../validators/updateMemberEmployerNumber';
 import { createUpdateDependentValidator } from '../../validators/createUpdateDependentValidator';
+import { updateMemberValidator } from '../../validators/updateMemberValidator';
 
 const baseRepository = new BaseRepository<Member>({
   tableName: TableName.MEMBER,
@@ -55,7 +56,11 @@ router.post(
   memberController.onCreateContribution,
 );
 router.put('/:id', memberController.onReplaceMember);
-router.patch('/:id', memberController.onUpdateMember);
+router.patch(
+  '/:id',
+  validatorMw(updateMemberValidator),
+  memberController.onUpdateMember,
+);
 router.patch(
   '/:id/employer_number',
   validatorMw(updateMemberEmployerNumberValidator),

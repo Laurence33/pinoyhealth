@@ -79,17 +79,23 @@ class MemberInteractor implements IMemberInteractor {
   }
 
   async updateMember(id: string, input: Partial<Member>) {
-    const { employer_number, ...allowedAttrs } = input;
+    const { employer_number, member_number, ...allowedAttrs } = input;
     if (employer_number) {
       throw new ValidationError('Cannot update employer_number.');
+    }
+    if (member_number) {
+      throw new ValidationError('Cannot update member_number.');
     }
     return await this.repository.update(id, allowedAttrs);
   }
 
   async replaceMember(id: string, input: Member) {
-    const { employer_number, ...allowedAttrs } = input;
+    const { employer_number, member_number, ...allowedAttrs } = input;
     if (employer_number) {
       throw new ValidationError('Cannot update employer_number.');
+    }
+    if (member_number) {
+      throw new ValidationError('Cannot update member_number.');
     }
     return await this.repository.update(id, allowedAttrs);
   }
