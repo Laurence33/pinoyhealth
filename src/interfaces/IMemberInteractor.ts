@@ -1,5 +1,6 @@
 import { Contribution } from 'entities/Contribution';
 import { Dependent } from 'entities/Dependent';
+import { Employer } from 'entities/Employer';
 import { Member } from 'entities/Member';
 
 export interface GetMembersResult {
@@ -7,9 +8,15 @@ export interface GetMembersResult {
   total: number;
   totalPages: number;
 }
+
+export interface MemberResource extends Member {
+  dependents: Dependent[];
+  contributions: Contribution[];
+  employer: Employer | null;
+}
 export interface IMemberInteractor {
   createMember(input: Member): Promise<Member | void | null>;
-  getMember(id: string): Promise<Member | void | null>;
+  getMember(id: string): Promise<MemberResource | null>;
   getMembers(pageSize: number, pageNumber: number): Promise<GetMembersResult>;
   getDependents(id: string): Promise<Dependent[]>;
   createDependent(id: string, dependent: Dependent): Promise<Dependent>;

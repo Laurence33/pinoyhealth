@@ -8,6 +8,7 @@ import { Member } from '../../entities/Member';
 import { TableName } from '../../interfaces/TableName';
 import { Dependent } from 'entities/Dependent';
 import { Contribution } from 'entities/Contribution';
+import { Employer } from 'entities/Employer';
 import { createContributionValidator } from '../../validators/createContributionValidator';
 import { updateMemberEmployerNumberValidator } from '../../validators/updateMemberEmployerNumber';
 import { createUpdateDependentValidator } from '../../validators/createUpdateDependentValidator';
@@ -27,10 +28,16 @@ const contributionRepository = new BaseRepository<Contribution>({
   primaryKey: 'member_number',
 });
 
+const employerRepository = new BaseRepository<Employer>({
+  tableName: TableName.EMPLOYER,
+  primaryKey: 'employer_number',
+});
+
 const memberInteractor = new MemberInteractor(
   baseRepository,
   dependentRepository,
   contributionRepository,
+  employerRepository,
 );
 const memberController = new MemberController(memberInteractor);
 

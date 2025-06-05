@@ -2,9 +2,11 @@ import { format, startOfMonth } from 'date-fns';
 import { Member } from 'entities/Member';
 import { Dependent } from 'entities/Dependent';
 import { Contribution } from 'entities/Contribution';
+import { Employer } from 'entities/Employer';
 import {
   GetMembersResult,
   IMemberInteractor,
+  MemberResource,
 } from '../interfaces/IMemberInteractor';
 import { IBaseRepository } from '../interfaces/IBaseRepository';
 import { generateRandomId } from '../utils/idGenerator';
@@ -15,6 +17,7 @@ class MemberInteractor implements IMemberInteractor {
     private repository: IBaseRepository<Member>,
     private dependentRepository: IBaseRepository<Dependent>,
     private contributionRepository: IBaseRepository<Contribution>,
+    private employerRepository: IBaseRepository<Employer>,
   ) {}
 
   createMember(input: Member) {
@@ -22,8 +25,23 @@ class MemberInteractor implements IMemberInteractor {
     return this.repository.create({ ...input, member_number: id });
   }
 
-  getMember(id: string): Promise<Member | void | null> {
-    return this.repository.findById(id);
+  async getMember(id: string): Promise<MemberResource | null> {
+    const member = await this.repository.findById(id);
+    const dependents = await this.dependentRepository.findBy({
+      parent_member_number: id,
+    });
+    const contributions = await this.contributionRepository.findBy({
+      member_number: id,
+    });
+    const employer = await this.employerRepository.findById(
+      member.employer_number,
+    );
+    return {
+      ...member,
+      dependents: dependents || [],
+      contributions: contributions || [],
+      employer: employer || null,
+    };
   }
 
   async getMembers(
