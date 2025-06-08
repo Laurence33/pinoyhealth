@@ -11,6 +11,7 @@ import {
 import { IBaseRepository } from '../interfaces/IBaseRepository';
 import { generateRandomId } from '../utils/idGenerator';
 import { ValidationError } from '../utils/ValidationError';
+import { IMemberRepository } from '../interfaces/IMemberRepository';
 
 class MemberInteractor implements IMemberInteractor {
   constructor(
@@ -18,6 +19,7 @@ class MemberInteractor implements IMemberInteractor {
     private dependentRepository: IBaseRepository<Dependent>,
     private contributionRepository: IBaseRepository<Contribution>,
     private employerRepository: IBaseRepository<Employer>,
+    private memberRepository: IMemberRepository,
   ) {}
 
   createMember(input: Member) {
@@ -42,6 +44,14 @@ class MemberInteractor implements IMemberInteractor {
       contributions: contributions || [],
       employer: employer || null,
     };
+  }
+
+  async getMemberV2(id: string): Promise<MemberResource | null> {
+    const member = await this.memberRepository.getMember(id);
+    if (!member) {
+      return null;
+    }
+    return member;
   }
 
   async getMembers(

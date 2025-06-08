@@ -13,6 +13,7 @@ import { createContributionValidator } from '../../validators/createContribution
 import { updateMemberEmployerNumberValidator } from '../../validators/updateMemberEmployerNumber';
 import { createUpdateDependentValidator } from '../../validators/createUpdateDependentValidator';
 import { updateMemberValidator } from '../../validators/updateMemberValidator';
+import { MemberRepository } from '../../repositories/memberRepository';
 
 const baseRepository = new BaseRepository<Member>({
   tableName: TableName.MEMBER,
@@ -33,11 +34,13 @@ const employerRepository = new BaseRepository<Employer>({
   primaryKey: 'employer_number',
 });
 
+const memberRepository = new MemberRepository();
 const memberInteractor = new MemberInteractor(
   baseRepository,
   dependentRepository,
   contributionRepository,
   employerRepository,
+  memberRepository,
 );
 const memberController = new MemberController(memberInteractor);
 
@@ -49,6 +52,7 @@ router.post(
   memberController.onCreateMember,
 );
 router.get('/:id', memberController.onGetMember);
+router.get('/v2/:id', memberController.onGetMemberV2);
 router.get('/:id/dependents', memberController.onGetDependents);
 router.post(
   '/:id/dependents',
