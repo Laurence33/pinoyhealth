@@ -2,7 +2,6 @@ import { format, startOfMonth } from 'date-fns';
 import { Member } from 'entities/Member';
 import { Dependent } from 'entities/Dependent';
 import { Contribution } from 'entities/Contribution';
-import { Employer } from 'entities/Employer';
 import {
   GetMembersResult,
   IMemberInteractor,
@@ -15,11 +14,9 @@ import { IMemberRepository } from '../interfaces/IMemberRepository';
 
 class MemberInteractor implements IMemberInteractor {
   constructor(
-    private repository: IBaseRepository<Member>,
+    private repository: IMemberRepository,
     private dependentRepository: IBaseRepository<Dependent>,
     private contributionRepository: IBaseRepository<Contribution>,
-    private employerRepository: IBaseRepository<Employer>,
-    private memberRepository: IMemberRepository,
   ) {}
 
   createMember(input: Member) {
@@ -28,26 +25,7 @@ class MemberInteractor implements IMemberInteractor {
   }
 
   async getMember(id: string): Promise<MemberResource | null> {
-    const member = await this.repository.findById(id);
-    const dependents = await this.dependentRepository.findBy({
-      parent_member_number: id,
-    });
-    const contributions = await this.contributionRepository.findBy({
-      member_number: id,
-    });
-    const employer = await this.employerRepository.findById(
-      member.employer_number,
-    );
-    return {
-      ...member,
-      dependents: dependents || [],
-      contributions: contributions || [],
-      employer: employer || null,
-    };
-  }
-
-  async getMemberV2(id: string): Promise<MemberResource | null> {
-    const member = await this.memberRepository.getMember(id);
+    const member = await this.repository.getMember(id);
     if (!member) {
       return null;
     }
@@ -86,11 +64,14 @@ class MemberInteractor implements IMemberInteractor {
     id: string,
     contribution: Contribution,
   ): Promise<Contribution> {
-    const { employer_number } = await this.repository.findById(id);
+    const member = await this.repository.findById(id);
+    if (!member) {
+      throw new ValidationError('Member not found.');
+    }
 
     // check for duplicate using member_number, employer_number, and month
     const found = await this.contributionRepository.findBy({
-      employer_number: employer_number,
+      employer_number: member.employer_number,
       member_number: id,
       month: new Date(format(startOfMonth(contribution.month), 'yyyy-MM-dd')),
     });
@@ -101,7 +82,7 @@ class MemberInteractor implements IMemberInteractor {
 
     return this.contributionRepository.create({
       ...contribution,
-      employer_number: employer_number,
+      employer_number: member.employer_number,
       member_number: id,
     });
   }
@@ -134,7 +115,7 @@ class MemberInteractor implements IMemberInteractor {
   ): Promise<Member> {
     // add some special business logic here for updating employer_number
     const member = await this.repository.findById(id);
-    if (member.employer_number === employer_number) {
+    if (member?.employer_number === employer_number) {
       throw new ValidationError('Already in same employer_number.');
     }
     return this.repository.update(id, { employer_number });

@@ -4,21 +4,15 @@ import { MemberInteractor } from '../../interactors/MemberInteractor';
 import { validatorMw } from '../../middlewares/validatorMw';
 import { createMemberValidator } from '../../validators/createMemberValidator';
 import { BaseRepository } from '../../repositories/baseRepository';
-import { Member } from '../../entities/Member';
 import { TableName } from '../../interfaces/TableName';
 import { Dependent } from 'entities/Dependent';
 import { Contribution } from 'entities/Contribution';
-import { Employer } from 'entities/Employer';
 import { createContributionValidator } from '../../validators/createContributionValidator';
 import { updateMemberEmployerNumberValidator } from '../../validators/updateMemberEmployerNumber';
 import { createUpdateDependentValidator } from '../../validators/createUpdateDependentValidator';
 import { updateMemberValidator } from '../../validators/updateMemberValidator';
 import { MemberRepository } from '../../repositories/memberRepository';
 
-const baseRepository = new BaseRepository<Member>({
-  tableName: TableName.MEMBER,
-  primaryKey: 'member_number',
-});
 const dependentRepository = new BaseRepository<Dependent>({
   tableName: TableName.DEPENDENT,
   primaryKey: 'id',
@@ -29,18 +23,11 @@ const contributionRepository = new BaseRepository<Contribution>({
   primaryKey: 'member_number',
 });
 
-const employerRepository = new BaseRepository<Employer>({
-  tableName: TableName.EMPLOYER,
-  primaryKey: 'employer_number',
-});
-
 const memberRepository = new MemberRepository();
 const memberInteractor = new MemberInteractor(
-  baseRepository,
+  memberRepository,
   dependentRepository,
   contributionRepository,
-  employerRepository,
-  memberRepository,
 );
 const memberController = new MemberController(memberInteractor);
 
@@ -52,7 +39,6 @@ router.post(
   memberController.onCreateMember,
 );
 router.get('/:id', memberController.onGetMember);
-router.get('/v2/:id', memberController.onGetMemberV2);
 router.get('/:id/dependents', memberController.onGetDependents);
 router.post(
   '/:id/dependents',

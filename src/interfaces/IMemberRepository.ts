@@ -8,7 +8,7 @@ interface IMemberRepository {
   findById(id: string): Promise<Member | null>;
   getMember(id: string): Promise<MemberResource | null>;
   delete(id: string): Promise<Member | null>;
-  countAll(): Promise<number>;
+  count(): Promise<number>;
 }
 
 export { IMemberRepository };

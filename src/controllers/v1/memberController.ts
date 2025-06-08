@@ -41,23 +41,6 @@ class MemberController {
     });
   };
 
-  onGetMemberV2 = async (
-    req: Request,
-    res: Response,
-    _nxt: NextFunction,
-  ): Promise<any> => {
-    const {
-      params: { id },
-    } = req;
-    const member = await this.interactor.getMemberV2(id);
-
-    return sendHttpResponse({
-      res,
-      statusCode: HttpCode.SUCCESS,
-      data: member,
-    });
-  };
-
   onGetMembers = async (
     req: Request,
     res: Response,

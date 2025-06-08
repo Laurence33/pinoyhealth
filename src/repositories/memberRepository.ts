@@ -15,9 +15,6 @@ class MemberRepository
       primaryKey: 'member_number',
     });
   }
-  countAll(): Promise<number> {
-    throw new Error('Method not implemented.');
-  }
 
   async getMember(id: string): Promise<MemberResource | null> {
     const result = await this.knex.raw(`
